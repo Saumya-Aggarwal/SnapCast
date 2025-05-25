@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://saumy-Aggarwal-s-workspace-absu55.ap-southeast-2.xata.sh/db/snapCast",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}
