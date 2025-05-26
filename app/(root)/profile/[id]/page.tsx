@@ -4,7 +4,7 @@ import { dummyCards } from "@/constants";
 
 async function page({ params }: ParamsWithSearch) {
   const { id } = await params;
-
+  
   return (
     <div className="wrapper page">
       <Header

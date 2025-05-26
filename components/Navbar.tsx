@@ -1,10 +1,15 @@
 "use client";
+import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-const user = {};
+
 function Navbar() {
   const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
+
   return (
     <header className="navbar">
       <nav>
@@ -16,15 +21,20 @@ function Navbar() {
           />
           <h1>SnapCast</h1>
         </Link>
-
-        {user ? (
+        {isPending ? (
+          <div className="flex items-center">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+          </div>
+        ) : (
           <figure>
-            <button onClick={() => router.push('/profile/123456')} className="cursor-pointer">
-              <img
-                src="/assets/images/dummy.jpg"
-                alt="User"
-                className="w-[32px] h-[32px] rounded-full aspect-square"
-              />
+            <button onClick={() => router.push(`/profile/${user?.id}`)}>
+              <Image
+                src={user?.image || ""}
+                alt="user image"
+                width={30}
+                height={30}
+                className="rounded-full"
+              ></Image>
             </button>
             <button className="cursor-pointer">
               <img
@@ -33,10 +43,7 @@ function Navbar() {
                 className="w-[25px] h-[25px] rotate-180 aspect-square"
               />
             </button>
-            
           </figure>
-        ) : (
-          <div>no one</div>
         )}
       </nav>
     </header>
