@@ -36,7 +36,7 @@ const page = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    visibility: "public",
+    visibility: "public" as const,
   });
   const [videoDuration, setVideoDuration] = useState(0);
   const [error, setError] = useState("");
@@ -46,8 +46,7 @@ const page = () => {
     if (typeof video.duration === "number" && video.duration !== null) {
       setVideoDuration(video.duration);
     }
-  }, [video.duration]);
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  }, [video.duration]);  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
