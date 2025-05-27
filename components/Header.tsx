@@ -11,10 +11,12 @@ function Header({ subHeader, title, userImg }: SharedHeaderProps) {
       <section className="header-container">
         <div className="details">
           {userImg && (
-            <img
+            <Image
               src={userImg}
               alt="User Image"
-              className="user-image rounded-full w-[66px] h-[66px]"
+              className="user-image rounded-full"
+              width={66}
+              height={66}
             />
           )}
 

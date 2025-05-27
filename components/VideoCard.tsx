@@ -77,7 +77,7 @@ const VideoCard = ({
       </Link>
       <button onClick={handleCopyLink} className="copy-btn">
         <Image
-          src={"/assets/icons/link.svg"}
+          src={copied ? "/assets/images/checked.png" : "/assets/icons/link.svg"}
           alt="copy"
           width={18}
           height={18}
