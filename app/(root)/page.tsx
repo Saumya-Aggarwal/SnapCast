@@ -13,6 +13,7 @@ const Page = async ({ searchParams }: SearchParams) => {
     filter,
     Number(page) || 1
   );
+  console.log("Videos fetched:", videos);
   return (
     <>
       <main className="wrapper page">

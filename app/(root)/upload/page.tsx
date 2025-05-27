@@ -8,6 +8,7 @@ import {
   saveVideoDetails,
 } from "@/lib/actions/video";
 import { useFileInput } from "@/lib/hooks/useFileInput";
+import { set } from "better-auth";
 import { useRouter } from "next/navigation";
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
@@ -46,7 +47,10 @@ const page = () => {
     if (typeof video.duration === "number" && video.duration !== null) {
       setVideoDuration(video.duration);
     }
-  }, [video.duration]);  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  }, [video.duration]);
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -54,6 +58,45 @@ const page = () => {
     }));
   };
 
+  useEffect(() => {
+    const checkForRecordedVideo = async () => {
+      try {
+        const stored = sessionStorage.getItem("recordedVideo");
+        if (!stored) {
+          return;
+        }
+        const { url, name, type, size, duration } = JSON.parse(stored);
+        const blob = await fetch(url).then((res) => res.blob());
+        const file = new File([blob], name, { type, lastModified: Date.now() });
+
+        if (video.inputRef.current) {
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          video.inputRef.current.files = dataTransfer.files;
+
+          const event = new Event("change", {
+            bubbles: true,
+          });
+
+          video.inputRef.current.dispatchEvent(event);
+          video.handleFileChange({
+            target: video.inputRef.current,
+          } as ChangeEvent<HTMLInputElement>);
+        }        // Make sure duration is properly set and never zero
+        if (duration && duration > 0) {
+          setVideoDuration(duration);
+        } else {
+          // Set a default duration if none provided (1 minute = 60 seconds)
+          setVideoDuration(60);
+        }
+        sessionStorage.removeItem("recordedVideo");
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error checking for recorded video:", error);
+      }
+    };
+    checkForRecordedVideo();
+  }, [video]);
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -101,7 +144,7 @@ const page = () => {
         duration: videoDuration,
       });
 
-      router.push("/video/" + videoId);
+      router.push("/");
     } catch (error) {
       console.log("error submitting", error);
     } finally {

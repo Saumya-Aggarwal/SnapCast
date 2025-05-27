@@ -311,14 +311,14 @@
     }
 
     .dialog {
-      @apply fixed inset-0 flex items-center justify-center z-50;
+      @apply fixed inset-0 flex items-center justify-center z-50 p-4 min-h-screen w-full h-full;
 
       .overlay-record {
         @apply absolute inset-0 bg-gray-40 backdrop-blur-xs shadow-20;
       }
 
       .dialog-content {
-        @apply relative bg-white rounded-20 p-6 shadow-lg w-full max-w-lg z-10;
+        @apply relative bg-white rounded-20 p-6 shadow-lg w-full max-w-lg z-10 mx-auto my-auto translate-y-0;
 
         figure {
           @apply flex justify-between items-center mb-4;

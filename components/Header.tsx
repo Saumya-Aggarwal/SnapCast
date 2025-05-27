@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import DropDownList from "./DropDownList";
+import RecordScreen from "./RecordScreen";
 
 function Header({ subHeader, title, userImg }: SharedHeaderProps) {
   return (
@@ -32,12 +33,7 @@ function Header({ subHeader, title, userImg }: SharedHeaderProps) {
             />
             <span>Upload a video</span>
           </Link>
-          <div className="record">
-            <button className="primary-btn">
-              <Image src={ICONS.record} alt="record" width={16} height={16} />
-              <span>Record a video</span>
-            </button>
-          </div>
+          <RecordScreen />
         </aside>
       </section>
 

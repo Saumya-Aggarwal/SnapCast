@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { use } from "react";
+import React, { use, useEffect, useState } from "react";
 
 const VideoCard = ({
   id,
@@ -14,6 +14,20 @@ const VideoCard = ({
   visibility,
   duration,
 }: VideoCardProps) => {
+  const [copied, setCopied] = useState(false);
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(`${window.location.origin}/video/${id}`);
+    setCopied(true);
+  };
+  useEffect(() => {
+    const changeChecked = setTimeout(() => {
+      if (copied) setCopied(false);
+    }, 2000);
+    return () => {
+      clearTimeout(changeChecked);
+    };
+  }, [copied]);
+
   return (
     <div className="video-card">
       <Link href={`/video/${id}`}>
@@ -61,16 +75,20 @@ const VideoCard = ({
           </h2>
         </article>{" "}
       </Link>
-      <button onClick={() => {}} className="copy-btn">
+      <button onClick={handleCopyLink} className="copy-btn">
         <Image
           src={"/assets/icons/link.svg"}
           alt="copy"
           width={18}
           height={18}
         ></Image>
-      </button>
-      {duration && (
-        <div className="duration">{Math.ceil(duration / 60)}min</div>
+      </button>{" "}
+      {duration !== null && duration !== 0 && (
+        <div className="duration">
+          {duration >= 60
+            ? `${Math.floor(duration / 60)} min ${duration % 60} sec`
+            : `${duration} sec`}
+        </div>
       )}
     </div>
   );

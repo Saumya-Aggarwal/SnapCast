@@ -2,9 +2,10 @@ import Header from "@/components/Header";
 import VideoCard from "@/components/VideoCard";
 import { dummyCards } from "@/constants";
 
-async function page({ params }: ParamsWithSearch) {
+async function page({ params, searchParams }: ParamsWithSearch) {
   const { id } = await params;
-  
+  const { query, filter } = await searchParams;
+
   return (
     <div className="wrapper page">
       <Header
