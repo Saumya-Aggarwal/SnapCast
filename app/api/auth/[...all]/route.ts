@@ -47,6 +47,29 @@ const protectedAuth = async (req: NextRequest): Promise<ArcjetDecision> => {
   });
 };
 
+// CORS helper function
+const corsHandler = (request: NextRequest, response: Response) => {
+  const origin = request.headers.get('origin');
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'https://snap-cast-amber.vercel.app',
+    'https://snap-cast-692t47bhy-saumya-aggarwals-projects.vercel.app'
+  ];
+
+  // Allow requests from Vercel preview URLs and main deployment
+  const isVercelDomain = origin?.includes('.vercel.app');
+  const isAllowedOrigin = allowedOrigins.includes(origin || '') || isVercelDomain;
+
+  if (isAllowedOrigin && origin) {
+    response.headers.set('Access-Control-Allow-Origin', origin);
+  }
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  return response;
+};
+
 export const POST = async (req: NextRequest) => {
   const decision = await protectedAuth(req);
   if (decision.isDenied()) {
@@ -63,6 +86,16 @@ export const POST = async (req: NextRequest) => {
     }
   }
 
-  return authHandler.POST(req);
+  const response = await authHandler.POST(req);
+  return corsHandler(req, response);
 };
-export const { GET } = authHandler;
+
+export const GET = async (req: NextRequest) => {
+  const response = await authHandler.GET(req);
+  return corsHandler(req, response);
+};
+
+export const OPTIONS = async (req: NextRequest) => {
+  const response = new Response(null, { status: 200 });
+  return corsHandler(req, response);
+};
