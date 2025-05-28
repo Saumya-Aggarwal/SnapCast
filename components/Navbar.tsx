@@ -10,6 +10,11 @@ function Navbar() {
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.push("/sign-in");
+  };
+
   return (
     <header className="navbar">
       <nav>
@@ -36,7 +41,7 @@ function Navbar() {
                 className="rounded-full"
               ></Image>
             </button>
-            <button className="cursor-pointer">
+            <button className="cursor-pointer" onClick={handleLogout}>
               <img
                 src="/assets/icons/logout.svg"
                 alt="Logout"
